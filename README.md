@@ -23,3 +23,14 @@ La personne du métier et celle traduisant en JavaScript n'étant pas la même, 
 Ce projet a pour objectif de réduire drastiquement cette boucle de feedback
 
 
+## Description de la solution
+
+Une personne connaissant les deux métiers (finances d'administration française et développement JavaScript) d'un coup n'aurait pas besoin d'outil supplémentaire, mais ces personnes n'existent pas ou pas en nombre suffisant pour le moment
+
+Une solution consisterait donc à créer un outil une seule fois qui permette aux personnes du métier des finances d'exprimer les sous-ensembles dans un langage compréhensible par une machine de manière à ce que la machine puisse faire rapidement les vérifications. Ce langage devrait être facile à comprendre et à apprendre
+
+Un [prototype d'un tel langage a déjà été créé](https://davidbruant.github.io/formule-doc-budg/index.html)
+
+Il n'est pas encore vérifié que ce langage convient à des personnes métier, même s'il existe des traces anecdotiques d'intérêt
+
+
