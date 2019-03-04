@@ -3,7 +3,7 @@ const {h} = preact;
 
 export default function AgregationTable({agregation, addFormula}){
     return html`
-        <table>
+        <table class="agregation">
             <thead>
                 <tr>
                     <th>Nom</th>
