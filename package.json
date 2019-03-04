@@ -1,0 +1,52 @@
+{
+  "name": "agregation-document-budgetaire",
+  "version": "1.0.0",
+  "description": "Outil permettant de définir une agrégation d'un document budgétaire",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify -d scripts/main.js -o build/browserify-bundle.js",
+    "watch": "watchify -d scripts/main.js -o build/browserify-bundle.js -v"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "@babel/preset-env"
+          ],
+          "plugins": [
+            [
+              "htm"
+            ]
+          ]
+        }
+      ]
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dtc-innovation/agregation-document-budgetaire.git"
+  },
+  "keywords": [],
+  "author": "David Bruant <bruant.d@gmail.com> (https://twitter.com/DavidBruant)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dtc-innovation/agregation-document-budgetaire/issues"
+  },
+  "homepage": "https://github.com/dtc-innovation/agregation-document-budgetaire#readme",
+  "dependencies": {
+    "preact": "^8.4.2",
+    "preact-redux": "^2.0.3",
+    "redux": "^4.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "babel-plugin-htm": "^2.1.0",
+    "babelify": "^10.0.0",
+    "browserify": "^16.2.3",
+    "watchify": "^3.11.1"
+  }
+}

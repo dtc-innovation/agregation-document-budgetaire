@@ -1,15 +1,31 @@
+import {createStore} from 'redux'
+
+export const Actions = Object.freeze({
+    'ADD_FORMULA': 'ADD_FORMULA'
+})
+
 
 function reducer(state, action){
-    return state
+    console.log('reducer', state, action)
+
+    switch(action.type){
+        case Actions.ADD_FORMULA: {
+            const {name, formula} = action;
+            state.formulas.push({name, formula})
+            return Object.assign({}, state);
+        }
+
+        default: {
+            return state
+
+        }
+    }
 }
 
 
-const store = Redux.createStore(
+export default createStore(
     reducer,
     {
-
+        formulas: []
     }
-)
-
-
-export default store;
+);

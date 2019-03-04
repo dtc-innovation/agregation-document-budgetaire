@@ -1,6 +1,33 @@
-import htm from 'https://unpkg.com/htm?module'
-const html = htm.bind(preact.h);
+import preact from 'preact'
+import {connect} from 'preact-redux'
 
-export default preactRedux.connect()(function(){
-    return html`<h1>Yo !</h1>`
-})
+import AgregationTable from './AgregationTable.js';
+
+import {Actions} from '../reduxStore.js'
+
+const {h} = preact;
+
+function mapDispatchToProps(dispatch){
+    return {
+        addFormula({name, formula}){
+            dispatch({
+                type: Actions.ADD_FORMULA,
+                name, 
+                formula
+            })
+        }
+    }
+}
+
+const Main = function(props){
+    console.log('Main', props)
+
+    return html`
+        <div>
+            <h1>Yo !</h1>
+            <${AgregationTable} ...${props}/>
+        </div>
+    `
+}
+
+export default connect(state => state, mapDispatchToProps)(Main)
