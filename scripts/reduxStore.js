@@ -6,8 +6,6 @@ export const Actions = Object.freeze({
 
 
 function reducer(state, action){
-    console.log('reducer', state, action)
-
     switch(action.type){
         case Actions.ADD_FORMULA: {
             const {name, formula} = action;
@@ -17,11 +15,9 @@ function reducer(state, action){
 
         default: {
             return state
-
         }
     }
 }
-
 
 export default createStore(
     reducer,

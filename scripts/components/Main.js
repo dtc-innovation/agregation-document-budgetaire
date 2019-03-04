@@ -19,9 +19,13 @@ function mapDispatchToProps(dispatch){
     }
 }
 
-const Main = function(props){
-    console.log('Main', props)
+function mapStateToProps({formulas}){
+    return {
+        agregation: formulas.map(({name, formula}) => ({name, formula, rows: []}))
+    }
+}
 
+const Main = function(props){
     return html`
         <div>
             <h1>Yo !</h1>
@@ -30,4 +34,4 @@ const Main = function(props){
     `
 }
 
-export default connect(state => state, mapDispatchToProps)(Main)
+export default connect(mapStateToProps, mapDispatchToProps)(Main)

@@ -1,9 +1,7 @@
 import preact from 'preact'
 const {h} = preact;
 
-export default function AgregationTable({formulas: agregation, addFormula}){
-    console.log('AgregationTable', agregation, addFormula)
-
+export default function AgregationTable({agregation, addFormula}){
     return html`
         <table>
             <thead>
