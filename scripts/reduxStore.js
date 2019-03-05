@@ -1,7 +1,8 @@
 import {createStore} from 'redux'
 
 export const Actions = Object.freeze({
-    'ADD_FORMULA': 'ADD_FORMULA'
+    'ADD_FORMULA': 'ADD_FORMULA',
+    'SET_TESTED_COMPTE_ADMINISTRATIF': 'SET_TESTED_COMPTE_ADMINISTRATIF'
 })
 
 
@@ -10,6 +11,11 @@ function reducer(state, action){
         case Actions.ADD_FORMULA: {
             const {name, formula} = action;
             state.formulas.push({name, formula})
+            return Object.assign({}, state);
+        }
+        case Actions.SET_TESTED_COMPTE_ADMINISTRATIF: {
+            const {testedCompteAdministratif} = action;
+            state.testedCompteAdministratif = testedCompteAdministratif
             return Object.assign({}, state);
         }
 
@@ -22,6 +28,7 @@ function reducer(state, action){
 export default createStore(
     reducer,
     {
-        formulas: []
+        formulas: [],
+        testedCompteAdministratif: undefined
     }
 );

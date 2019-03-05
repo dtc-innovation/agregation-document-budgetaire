@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "browserify -d scripts/main.js -o build/browserify-bundle.js",
+    "plans-de-comptes": "npx github:dtc-innovation/plans-de-compte --in data/CA --out data/plansDeCompte",
     "watch": "watchify -d scripts/main.js -o build/browserify-bundle.js -v"
   },
   "browserify": {
@@ -37,7 +38,9 @@
   },
   "homepage": "https://github.com/dtc-innovation/agregation-document-budgetaire#readme",
   "dependencies": {
+    "d3-array": "^2.0.3",
     "d3-fetch": "^1.1.2",
+    "immutable": "^4.0.0-rc.12",
     "preact": "^8.4.2",
     "preact-redux": "^2.0.3",
     "redux": "^4.0.1"
