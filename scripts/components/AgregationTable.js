@@ -1,4 +1,6 @@
 import preact from 'preact'
+import {sum} from 'd3-array'
+
 const {h} = preact;
 
 export default function AgregationTable({agregation, addFormula}){
@@ -19,16 +21,21 @@ export default function AgregationTable({agregation, addFormula}){
                             <tr>
                                 <td>${name}</td>
                                 <td>${formula}</td>
-                                <td>${rows.length}</td>
-                                <td>${rows.length*1000}</td>
+                                <td>${rows.size}</td>
+                                <td>${sum(rows.toJS().map(r => r['MtReal'])).toFixed(2)+'€'}</td>
                             </tr>
                         `
                     })
                 }
-                <tr onClick=${() => addFormula({name: '', formula: ''})}>
-                    <td colspan="4">+ Ajouter une ligne</td>
-                </tr>
             </tbody>
         </table>
     `
+
+    /*
+        Table row to add formulas manually:
+
+        <tr onClick=${() => addFormula({name: '', formula: ''})}>
+            <td colspan="4">+ Ajouter une ligne</td>
+        </tr>
+    */
 }

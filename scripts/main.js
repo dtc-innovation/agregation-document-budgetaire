@@ -8,20 +8,20 @@ import montreuilCVSToAgregationFormulas from './montreuilCVSToAgregationFormulas
 import xmlDocumentToDocumentBudgetaire from './finance/xmlDocumentToDocumentBudgetaire.js'
 import makeNatureToChapitreFI from './finance/makeNatureToChapitreFI.js'
 
+
 // apparently, babel-plugin-htm is run after preset-env (which compiles import statements)
 // so `h` is applied after the compilation that transforms 
 // `import {h} from preact` to `var _preact = require('preact'); var h = _preact.h`
 // without this line, the compilation of `html` results in `h` not being defined
 const {h} = preact;
 
+
 // Download Montreuil "Open data nomenclature" CSV and transform it to formulas
 csv('./data/agregation-Montreuil-v4.csv')
-.then(natFuncAggRows => {
-	console.log(natFuncAggRows.length, natFuncAggRows[0])
-	return natFuncAggRows
-})
 .then(montreuilCVSToAgregationFormulas)
 .then(formulas => {
+	console.log('formulas', formulas)
+
 	for(const {name, formula} of formulas){
 		store.dispatch({
 			type: Actions.ADD_FORMULA,
@@ -41,8 +41,8 @@ Promise.all([
 .then(docBudg => {
 	console.log('docBudg', docBudg.toJS())
 	store.dispatch({
-		type: Actions.SET_TESTED_COMPTE_ADMINISTRATIF,
-		testedCompteAdministratif: docBudg
+		type: Actions.SET_TESTED_DOCUMENT_BUDGETAIRE,
+		testedDocumentBudgetaire: docBudg
 	})
 })
 .catch(console.error)
