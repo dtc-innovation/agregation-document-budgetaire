@@ -10,15 +10,42 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
         <script crossorigin="anonymous" src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
-        <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/nearley@2.15.1/lib/nearley.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap@4.3.1/dist/css/bootstrap-reboot.min.css" crossorigin="anonymous">
         
-        <!-- <script crossorigin="anonymous" src="./grammar.js"></script> -->
-
         <script defer type=module src="./build/browserify-bundle.js"></script>
 
-        <link rel="stylesheet" href="https://unpkg.com/bootstrap@4.3.1/dist/css/bootstrap-reboot.min.css" crossorigin="anonymous">
-
         <style>
+
+            table.agregation tr td{
+                vertical-align: top;
+            }
+
+            table.agregation tr th:nth-child(1),
+            table.agregation tr td:nth-child(1){
+                max-width: 25em;
+            }
+            table.agregation tr th:nth-child(2),
+            table.agregation tr td:nth-child(2){
+                max-width: 40em;
+            }
+
+            table.agregation tr td:nth-child(2){
+                max-height: 5em;
+                overflow: scroll;
+                display: block;
+            }
+            
+            table.agregation tr td:nth-child(4){
+                text-align: right;
+            }
+
+            table.agregation tr:nth-child(odd) td{
+                background-color: #f5f5f5;
+            }
+
+            
+
+
         </style>
 
     </head>

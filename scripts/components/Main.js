@@ -1,9 +1,10 @@
 import preact from 'preact'
 import {connect} from 'preact-redux'
 
-import AgregationTable from './AgregationTable.js';
-
+import makeLigneBudgetFilterFromFormula from '../DocumentBudgetaireQueryLanguage/makeLigneBudgetFilterFromFormula.js'
+import Agregation from './Agregation.js'
 import {Actions} from '../reduxStore.js'
+import { DocumentBudgetaire } from '../finance/DocBudgDataStructures';
 
 const {h} = preact;
 
@@ -19,9 +20,18 @@ function mapDispatchToProps(dispatch){
     }
 }
 
-function mapStateToProps({formulas}){
+function mapStateToProps({formulas, testedDocumentBudgetaire}){
     return {
-        agregation: formulas.map(({name, formula}) => ({name, formula, rows: []}))
+        agregation: formulas.map(({name, formula}) => (
+            {
+                name, 
+                formula, 
+                rows: testedDocumentBudgetaire ?
+                    testedDocumentBudgetaire.rows.filter(makeLigneBudgetFilterFromFormula(formula)) :
+                    []
+            }
+        )),
+        documentBudgetaire: testedDocumentBudgetaire
     }
 }
 
@@ -29,7 +39,7 @@ const Main = function(props){
     return html`
         <div>
             <h1>Yo !</h1>
-            <${AgregationTable} ...${props}/>
+            <${Agregation} ...${props}/>
         </div>
     `
 }
