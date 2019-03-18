@@ -26,7 +26,7 @@ function makeFormulaFromMontreuilRows(rows){
 export default function(natFuncAggRows){
     const rowsByName = new Map()
     
-    for(const row of natFuncAggRows.slice(0, 500)){
+    for(const row of natFuncAggRows){
         const aggName = makeAgragationName(row);
 
         let rowsForName = rowsByName.get(aggName) || [];

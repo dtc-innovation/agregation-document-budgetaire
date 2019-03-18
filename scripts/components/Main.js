@@ -21,7 +21,7 @@ function mapStateToProps({formulas, testedDocumentBudgetaire}){
                 name, 
                 formula, 
                 rows: testedDocumentBudgetaire ?
-                    testedDocumentBudgetaire.rows.slice(0, 40).filter(makeLigneBudgetFilterFromFormula(formula)) :
+                    testedDocumentBudgetaire.rows.filter(makeLigneBudgetFilterFromFormula(formula)) :
                     new ImmutableSet()
             }
         )),

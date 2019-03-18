@@ -39,11 +39,13 @@ Promise.all([
 })
 .catch(console.error)
 
+const container = document.querySelector('#react-content')
 
 store.subscribe(state => {
 	preact.render(
 		html`<${Main} store=${ {...store} }/>`,
-		document.querySelector('#react-content')
+		container,
+		container.firstElementChild
 	);
 })
 

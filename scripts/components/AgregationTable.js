@@ -16,7 +16,7 @@ export default function AgregationTable({agregation, addFormula}){
             </thead>
             <tbody>
                 ${
-                    agregation.slice(0, 3).map(({name, formula, rows}) => {
+                    agregation.map(({name, formula, rows}) => {
                         return html`
                             <tr>
                                 <td>${name}</td>
