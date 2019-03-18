@@ -1,7 +1,5 @@
-import preact from 'preact'
+import {h} from 'preact'
 import {sum} from 'd3-array'
-
-const {h} = preact;
 
 export default function AgregationTable({agregation, addFormula}){
     return html`
@@ -30,11 +28,8 @@ export default function AgregationTable({agregation, addFormula}){
             </tbody>
         </table>
     `
-
+    
     /*
-
-
-
         Table row to add formulas manually:
 
         <tr onClick=${() => addFormula({name: '', formula: ''})}>

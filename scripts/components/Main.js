@@ -1,10 +1,8 @@
 import {Set as ImmutableSet} from 'immutable'
-import preact from 'preact'
+import {h} from 'preact'
 
 import makeLigneBudgetFilterFromFormula from '../DocumentBudgetaireQueryLanguage/makeLigneBudgetFilterFromFormula.js'
 import Agregation from './Agregation.js'
-
-const {h} = preact;
 
 function mapDispatchToProps(store){
     return {

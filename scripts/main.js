@@ -1,4 +1,4 @@
-import preact from 'preact'
+import {h, render} from 'preact'
 import {csv, xml} from 'd3-fetch';
 
 import Main from './components/Main.js'
@@ -6,13 +6,6 @@ import store from './store.js'
 import montreuilCVSToAgregationFormulas from './montreuilCVSToAgregationFormulas.js'
 import xmlDocumentToDocumentBudgetaire from './finance/xmlDocumentToDocumentBudgetaire.js'
 import makeNatureToChapitreFI from './finance/makeNatureToChapitreFI.js'
-
-
-// apparently, babel-plugin-htm is run after preset-env (which compiles import statements)
-// so `h` is applied after the compilation that transforms 
-// `import {h} from preact` to `var _preact = require('preact'); var h = _preact.h`
-// without this line, the compilation of `html` results in `h` not being defined
-const {h} = preact;
 
 
 // Download Montreuil "Open data nomenclature" CSV and transform it to formulas
@@ -42,7 +35,7 @@ Promise.all([
 const container = document.querySelector('#react-content')
 
 store.subscribe(state => {
-	preact.render(
+	render(
 		html`<${Main} store=${ {...store} }/>`,
 		container,
 		container.firstElementChild
