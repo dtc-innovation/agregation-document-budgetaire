@@ -8,19 +8,8 @@ import xmlDocumentToDocumentBudgetaire from './finance/xmlDocumentToDocumentBudg
 import makeNatureToChapitreFI from './finance/makeNatureToChapitreFI.js'
 
 
-// Download Montreuil "Open data nomenclature" CSV and transform it to formulas
-csv('./data/agregation-Montreuil-v4.csv')
-.then(montreuilCVSToAgregationFormulas)
-.then(formulas => {
-	console.log('formulas', formulas)
-
-	for(const {name, formula} of formulas){
-		store.mutations.addFormula({ name, formula })
-	}
-})
-
 // Download and transform some Compte Administratif for easier use
-Promise.all([
+const docBudgP = Promise.all([
 	xml('./data/CA/CA 2017.xml'),
 	xml('./data/plansDeCompte/plan-de-compte-M14-M14_COM_SUP3500-2017.xml')
 		.then(pdC => makeNatureToChapitreFI([pdC]))
@@ -29,8 +18,25 @@ Promise.all([
 .then(docBudg => {
 	console.log('docBudg', docBudg.toJS())
 	store.mutations.setTestedDocumentBudgetaire(docBudg)
+	return docBudg
 })
 .catch(console.error)
+
+
+// Download Montreuil "Open data nomenclature" CSV and transform it to formulas
+Promise.all([
+	csv('./data/agregation-Montreuil-v4.csv'),
+	docBudgP
+])
+.then(([csvData, docBudg]) => montreuilCVSToAgregationFormulas(csvData, [docBudg]))
+.then(formulas => {
+	console.log('formulas', formulas)
+
+	for(const {name, formula} of formulas){
+		store.mutations.addFormula({ name, formula })
+	}
+})
+
 
 const container = document.querySelector('#react-content')
 
