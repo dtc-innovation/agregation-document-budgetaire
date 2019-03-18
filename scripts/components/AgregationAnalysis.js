@@ -47,7 +47,7 @@ export default function({agregation, documentBudgetaire}){
             <h2>Lignes non-utilisées (${unusedRows.length})</h2>
             <table>
                 ${
-                    unusedRows.map(row => {
+                    unusedRows.slice(0, 5).map(row => {
                         return html`
                             <tr>
                                 <td>${row["CodRD"]}${row["FI"]}</td>

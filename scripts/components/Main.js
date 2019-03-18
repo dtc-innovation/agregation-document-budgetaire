@@ -1,21 +1,15 @@
+import {Set as ImmutableSet} from 'immutable'
 import preact from 'preact'
-import {connect} from 'preact-redux'
 
 import makeLigneBudgetFilterFromFormula from '../DocumentBudgetaireQueryLanguage/makeLigneBudgetFilterFromFormula.js'
 import Agregation from './Agregation.js'
-import {Actions} from '../reduxStore.js'
-import { DocumentBudgetaire } from '../finance/DocBudgDataStructures';
 
 const {h} = preact;
 
-function mapDispatchToProps(dispatch){
+function mapDispatchToProps(store){
     return {
         addFormula({name, formula}){
-            dispatch({
-                type: Actions.ADD_FORMULA,
-                name, 
-                formula
-            })
+            store.mutations.addFormula({name, formula})
         }
     }
 }
@@ -27,21 +21,25 @@ function mapStateToProps({formulas, testedDocumentBudgetaire}){
                 name, 
                 formula, 
                 rows: testedDocumentBudgetaire ?
-                    testedDocumentBudgetaire.rows.filter(makeLigneBudgetFilterFromFormula(formula)) :
-                    []
+                    testedDocumentBudgetaire.rows.slice(0, 40).filter(makeLigneBudgetFilterFromFormula(formula)) :
+                    new ImmutableSet()
             }
         )),
         documentBudgetaire: testedDocumentBudgetaire
     }
 }
 
-const Main = function(props){
+export default function({store}){
+    const props = Object.assign(
+        mapStateToProps(store.state),
+        mapDispatchToProps(store)
+    )
+
     return html`
         <div>
             <h1>Yo !</h1>
             <${Agregation} ...${props}/>
         </div>
+        
     `
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(Main)

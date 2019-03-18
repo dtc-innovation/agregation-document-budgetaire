@@ -5,26 +5,19 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify -d scripts/main.js -o build/browserify-bundle.js",
     "railroad": "nearley-railroad scripts/DocumentBudgetaireQueryLanguage/grammar.ne -o railroad.html",
     "grammar": "nearleyc scripts/DocumentBudgetaireQueryLanguage/grammar.ne -o scripts/DocumentBudgetaireQueryLanguage/grammar.js",
     "plans-de-comptes": "npx github:dtc-innovation/plans-de-compte --in data/CA --out data/plansDeCompte",
-    "watch": "watchify -d scripts/main.js -o build/browserify-bundle.js -v"
+    "build": "rollup -c",
+    "watch": "rollup -c -w -m"
   },
-  "browserify": {
-    "transform": [
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ],
+    "plugins": [
       [
-        "babelify",
-        {
-          "presets": [
-            "@babel/preset-env"
-          ],
-          "plugins": [
-            [
-              "htm"
-            ]
-          ]
-        }
+        "htm"
       ]
     ]
   },
@@ -40,21 +33,21 @@
   },
   "homepage": "https://github.com/dtc-innovation/agregation-document-budgetaire#readme",
   "dependencies": {
+    "baredux": "github:DavidBruant/baredux",
     "d3-array": "^2.0.3",
     "d3-fetch": "^1.1.2",
     "fast-memoize": "^2.5.1",
     "immutable": "^4.0.0-rc.12",
     "nearley": "^2.16.0",
-    "preact": "^8.4.2",
-    "preact-redux": "^2.0.3",
-    "redux": "^4.0.1"
+    "preact": "^8.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
     "babel-plugin-htm": "^2.1.0",
-    "babelify": "^10.0.0",
-    "browserify": "^16.2.3",
-    "watchify": "^3.11.1"
+    "rollup": "^1.6.0",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-commonjs": "^9.2.1",
+    "rollup-plugin-node-resolve": "^4.0.1"
   }
 }

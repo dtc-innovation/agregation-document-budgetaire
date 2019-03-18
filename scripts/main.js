@@ -1,9 +1,8 @@
-import {render, default as preact} from 'preact'
-import {Provider} from 'preact-redux'
+import preact from 'preact'
 import {csv, xml} from 'd3-fetch';
 
 import Main from './components/Main.js'
-import {Actions, default as store} from './reduxStore.js'
+import store from './store.js'
 import montreuilCVSToAgregationFormulas from './montreuilCVSToAgregationFormulas.js'
 import xmlDocumentToDocumentBudgetaire from './finance/xmlDocumentToDocumentBudgetaire.js'
 import makeNatureToChapitreFI from './finance/makeNatureToChapitreFI.js'
@@ -23,11 +22,7 @@ csv('./data/agregation-Montreuil-v4.csv')
 	console.log('formulas', formulas)
 
 	for(const {name, formula} of formulas){
-		store.dispatch({
-			type: Actions.ADD_FORMULA,
-			name, 
-			formula
-		})
+		store.mutations.addFormula({ name, formula })
 	}
 })
 
@@ -40,19 +35,16 @@ Promise.all([
 .then(([doc, natureToChapitreFI]) => xmlDocumentToDocumentBudgetaire(doc, natureToChapitreFI))
 .then(docBudg => {
 	console.log('docBudg', docBudg.toJS())
-	store.dispatch({
-		type: Actions.SET_TESTED_DOCUMENT_BUDGETAIRE,
-		testedDocumentBudgetaire: docBudg
-	})
+	store.mutations.setTestedDocumentBudgetaire(docBudg)
 })
 .catch(console.error)
 
 
-render(
-	html`
-		<${Provider} store=${store}>
-			<${Main} />
-		<//>
-	`, 
-	document.querySelector('#react-content')
-);
+store.subscribe(state => {
+	preact.render(
+		html`<${Main} store=${ {...store} }/>`,
+		document.querySelector('#react-content')
+	);
+})
+
+
