@@ -1,6 +1,4 @@
-import preact from 'preact'
-
-const {h} = preact;
+import {h} from 'preact'
 
 function makeUnusedLigneBudgetSet(documentBudgetaire, agregation){
     return documentBudgetaire.rows.filter(ligneBudget => {

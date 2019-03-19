@@ -1,9 +1,8 @@
-import preact from 'preact'
+import {h} from 'preact'
 
 import AgregationAnalysis from './AgregationAnalysis.js'
 import AgregationTable from './AgregationTable.js'
 
-const {h} = preact;
 
 export default function({agregation, documentBudgetaire}){
     return html`
