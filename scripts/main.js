@@ -35,7 +35,7 @@ if(isMontreuil){
 		console.log('formulas', formulas)
 
 		for(const {name, formula} of formulas){
-			store.mutations.addFormula({ name, formula })
+			store.mutations.addFormula({ id: name, name, formula })
 		}
 	})
 }
