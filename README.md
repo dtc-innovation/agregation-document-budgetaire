@@ -54,6 +54,8 @@ Il n'est pas encore vérifié que ce langage convient à des personnes métier, 
 
 Aller sur http://localhost:5000/
 
+Pour les choses spécifiques à Montreuil : http://localhost:5000/?montreuil
+
 
 ### Dev
 
