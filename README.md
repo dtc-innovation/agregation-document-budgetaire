@@ -34,3 +34,20 @@ Un [prototype d'un tel langage a déjà été créé](https://davidbruant.github
 Il n'est pas encore vérifié que ce langage convient à des personnes métier, même s'il existe des traces anecdotiques d'intérêt
 
 
+## Utilisation
+
+- installer node.js+npm
+- `npm install`
+- `npm start`
+
+Aller sur http://localhost:5000/
+
+Pour les choses spécifiques à Montreuil : http://localhost:5000/?montreuil
+
+
+### Dev
+
+`npm run watch`
+
+
+
