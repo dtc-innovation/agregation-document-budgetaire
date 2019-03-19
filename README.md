@@ -16,9 +16,21 @@ Toutefois, nous avons découvert que la traduction en JavaScript de cette vue ag
 - une personne du métier des finances propose une définition de chaque sous-ensemble
 - une personne traduit ces définitions en JavaScript
 - on lance l'outil pour voir s'il reste des problèmes de cohérence
-- on recommence s'il reste des problèmes
+- on recommence s'il reste des problèmes"serve": "serve",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "grammar": "nearleyc scripts/DocumentBudgetaireQueryLanguage/grammar.ne -o scripts/DocumentBudgetaireQueryLanguage/grammar.js",
+    "build": "rollup -c",
+    "watch": "rollup -c -w -m",
+    "railroad": "nearley-railroad scripts/DocumentBudgetaireQueryLanguage/grammar.ne -o railroad.html",
+    "plans-de-comptes": "npx github:dtc-innovation/plans-de-compte --in data/CA --out data/plansDeCompte"
 
-La personne du métier et celle traduisant en JavaScript n'étant pas la même, la boucle de feedback était assez lente
+La personne du métier et celle traduisan"serve": "serve",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "grammar": "nearleyc scripts/DocumentBudgetaireQueryLanguage/grammar.ne -o scripts/DocumentBudgetaireQueryLanguage/grammar.js",
+    "build": "rollup -c",
+    "watch": "rollup -c -w -m",
+    "railroad": "nearley-railroad scripts/DocumentBudgetaireQueryLanguage/grammar.ne -o railroad.html",
+    "plans-de-comptes": "npx github:dtc-innovation/plans-de-compte --in data/CA --out data/plansDeCompte"dback était assez lente
 
 Ce projet a pour objectif de réduire drastiquement cette boucle de feedback
 
@@ -32,5 +44,20 @@ Une solution consisterait donc à créer un outil une seule fois qui permette au
 Un [prototype d'un tel langage a déjà été créé](https://davidbruant.github.io/formule-doc-budg/index.html)
 
 Il n'est pas encore vérifié que ce langage convient à des personnes métier, même s'il existe des traces anecdotiques d'intérêt
+
+
+## Utilisation
+
+- installer node.js+npm
+- `npm install`
+- `npm start`
+
+Aller sur http://localhost:5000/
+
+
+### Dev
+
+`npm run watch`
+
 
 
