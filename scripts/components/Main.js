@@ -4,18 +4,11 @@ import {h} from 'preact'
 import makeLigneBudgetFilterFromFormula from '../DocumentBudgetaireQueryLanguage/makeLigneBudgetFilterFromFormula.js'
 import Agregation from './Agregation.js'
 
-function mapDispatchToProps(store){
-    return {
-        addFormula({name, formula}){
-            store.mutations.addFormula({name, formula})
-        }
-    }
-}
-
 function mapStateToProps({formulas, testedDocumentBudgetaire}){
     return {
-        agregation: formulas.map(({name, formula}) => (
+        agregation: [...formulas.values()].map(({id, name, formula}) => (
             {
+                id,
                 name, 
                 formula, 
                 rows: testedDocumentBudgetaire ?
@@ -30,7 +23,7 @@ function mapStateToProps({formulas, testedDocumentBudgetaire}){
 export default function({store}){
     const props = Object.assign(
         mapStateToProps(store.state),
-        mapDispatchToProps(store)
+        store.mutations
     )
 
     return html`

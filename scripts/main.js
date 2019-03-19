@@ -7,7 +7,6 @@ import montreuilCVSToAgregationFormulas from './montreuilCVSToAgregationFormulas
 import xmlDocumentToDocumentBudgetaire from './finance/xmlDocumentToDocumentBudgetaire.js'
 import makeNatureToChapitreFI from './finance/makeNatureToChapitreFI.js'
 
-
 const isMontreuil = new Set((new URLSearchParams(location.search)).keys()).has('montreuil')
 
 if(isMontreuil){
@@ -40,20 +39,31 @@ if(isMontreuil){
 		}
 	})
 }
+else{
+	// Download and transform some Compte Administratif
+	Promise.all([
+		xml('./data/CA/CA2017BPAL.xml'),
+		xml('./data/plansDeCompte/plan-de-compte-M52-M52-2017.xml')
+			.then(pdC => makeNatureToChapitreFI([pdC]))
+	])
+	.then(([doc, natureToChapitreFI]) => xmlDocumentToDocumentBudgetaire(doc, natureToChapitreFI))
+	.then(docBudg => {
+		store.mutations.setTestedDocumentBudgetaire(docBudg)
+	})
+	.catch(console.error)
+
+}
 
 const container = document.querySelector('#react-content')
 
-store.subscribe(state => {
+function renderUI(){
 	render(
 		html`<${Main} store=${ {...store} }/>`,
 		container,
 		container.firstElementChild
 	);
-})
+}
 
+store.subscribe(renderUI)
 
-render(
-	html`<${Main} store=${ {...store} }/>`,
-	container,
-	container.firstElementChild
-)
+renderUI()

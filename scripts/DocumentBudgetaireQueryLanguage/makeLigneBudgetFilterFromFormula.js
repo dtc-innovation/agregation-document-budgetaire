@@ -34,8 +34,8 @@ function matchesComplex(r, combo) {
     if (typeof combo === 'string')
         return matchesSimple(r, combo);
     
-    // Array.isArray(combo)
-    
+    // assert(Array.isArray(combo))
+
     const [left, middle, right] = combo;
     
     if (left === '(' && right === ')')
@@ -58,12 +58,23 @@ function matchesComplex(r, combo) {
     console.warn('matchesSubset - Unhandled case', combo);
 }
 
+const returnFalseFunction = Object.freeze(() => false);
+
 /*
     returns a function that can be used in the context of a documentBudgetaire.rows.filter()
 */
 export default memoize(function makeLigneBudgetFilterFromFormula(formula) {
     const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
-    parser.feed(formula);
 
-    return memoize(budgetRow => matchesComplex(budgetRow, parser.results[0]))
+    try{
+        parser.feed(formula);
+
+        if(parser.results[0] === undefined)
+            return returnFalseFunction
+        else
+            return memoize(budgetRow => matchesComplex(budgetRow, parser.results[0]))
+    }
+    catch(e){
+        return returnFalseFunction
+    }
 })
