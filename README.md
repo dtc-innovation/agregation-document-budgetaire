@@ -16,21 +16,9 @@ Toutefois, nous avons découvert que la traduction en JavaScript de cette vue ag
 - une personne du métier des finances propose une définition de chaque sous-ensemble
 - une personne traduit ces définitions en JavaScript
 - on lance l'outil pour voir s'il reste des problèmes de cohérence
-- on recommence s'il reste des problèmes"serve": "serve",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "grammar": "nearleyc scripts/DocumentBudgetaireQueryLanguage/grammar.ne -o scripts/DocumentBudgetaireQueryLanguage/grammar.js",
-    "build": "rollup -c",
-    "watch": "rollup -c -w -m",
-    "railroad": "nearley-railroad scripts/DocumentBudgetaireQueryLanguage/grammar.ne -o railroad.html",
-    "plans-de-comptes": "npx github:dtc-innovation/plans-de-compte --in data/CA --out data/plansDeCompte"
+- on recommence s'il reste des problèmes
 
-La personne du métier et celle traduisan"serve": "serve",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "grammar": "nearleyc scripts/DocumentBudgetaireQueryLanguage/grammar.ne -o scripts/DocumentBudgetaireQueryLanguage/grammar.js",
-    "build": "rollup -c",
-    "watch": "rollup -c -w -m",
-    "railroad": "nearley-railroad scripts/DocumentBudgetaireQueryLanguage/grammar.ne -o railroad.html",
-    "plans-de-comptes": "npx github:dtc-innovation/plans-de-compte --in data/CA --out data/plansDeCompte"dback était assez lente
+La personne du métier et celle traduisant en JavaScript n'étant pas la même, la boucle de feedback était assez lente
 
 Ce projet a pour objectif de réduire drastiquement cette boucle de feedback
 
