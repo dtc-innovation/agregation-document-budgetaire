@@ -1,11 +1,16 @@
 import {h, render} from 'preact'
 import {csv, xml} from 'd3-fetch';
 
-import Main from './components/Main.js'
-import store from './store.js'
-import montreuilCVSToAgregationFormulas from './montreuilCVSToAgregationFormulas.js'
 import xmlDocumentToDocumentBudgetaire from './finance/xmlDocumentToDocumentBudgetaire.js'
 import makeNatureToChapitreFI from './finance/makeNatureToChapitreFI.js'
+
+import Main from './components/Main.js'
+
+import store from './store.js'
+
+import { getStoredState, saveState } from './stateStorage.js'
+
+import montreuilCVSToAgregationFormulas from './montreuilCVSToAgregationFormulas.js'
 
 const isMontreuil = new Set((new URLSearchParams(location.search)).keys()).has('montreuil')
 
@@ -52,8 +57,13 @@ else{
 	})
 	.catch(console.error)
 
+	const formulas = getStoredState()
+	for(const {id, name, formula} of formulas){
+		store.mutations.addFormula({ id, name, formula })
+	}
 }
 
+// UI render
 const container = document.querySelector('#react-content')
 
 function renderUI(){
@@ -64,6 +74,12 @@ function renderUI(){
 	);
 }
 
+// initial render
+renderUI()
+
+// render when state changes
 store.subscribe(renderUI)
 
-renderUI()
+
+// Save state regularly
+store.subscribe(saveState)
