@@ -38,8 +38,8 @@ export default function({documentBudgetaire, onNewDocumentBudgetaireText}){
                             </div>
                         ` : undefined
                 }
+
                 <${DocumentBudgetaireInput} onNewDocumentBudgetaireText=${onNewDocumentBudgetaireText} />
-                
             </section>
         </header>
     `

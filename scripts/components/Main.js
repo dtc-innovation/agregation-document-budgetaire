@@ -41,9 +41,9 @@ export default function({store}){
     )
 
     return html`
-        <div>
+        <main>
             <${ContextHeader} documentBudgetaire=${docBudg} onNewDocumentBudgetaireText=${actions.onNewDocumentBudgetaireText} /> 
             <${Agregation} ...${props}/>
-        </div>
+        </main>
     `
 }

@@ -24,10 +24,10 @@ export default class AgregationTableRow extends Component{
                     ${
                         focused && rows.size >= 1 ?
                             html`
-                                <table>
+                                <table class="formula-rows">
                                     <thead>
                                         <tr>
-                                            ${['RD', 'FI', 'Fonction', 'Nature', 'Montant'].map(s => html`<th>${s}</th>`)}
+                                            ${['RDFI', 'Fonction', 'Nature', 'Montant'].map(s => html`<th>${s}</th>`)}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -35,11 +35,10 @@ export default class AgregationTableRow extends Component{
                                             rows.toArray().map(r => {
                                                 return html`
                                                     <tr>
-                                                        <td>${r['CodRD']}</td>
-                                                        <td>${r['FI']}</td>
+                                                        <td>${r['CodRD']+r['FI']}</td>
                                                         <td>${r['Fonction']}</td>
                                                         <td>${r['Nature']}</td>
-                                                        <td>${r['MtReal'].toFixed(2)+'€'}</td>
+                                                        <td class="money-amount">${r['MtReal'].toFixed(2)+'€'}</td>
                                                     </tr>
                                                 `
                                             })
