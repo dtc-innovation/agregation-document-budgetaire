@@ -1,5 +1,7 @@
 import Store from 'baredux'
 
+import {makeAsyncMutationFunctions} from './asyncStatusHelpers.js'
+
 export default new Store({
     state: {
         formulas: new Map(),
@@ -12,8 +14,6 @@ export default new Store({
         changeFormula(state, newFormula){
             state.formulas.set(newFormula.id, newFormula)
         },
-        setTestedDocumentBudgetaire(state, testedDocumentBudgetaire){
-            state.testedDocumentBudgetaire = testedDocumentBudgetaire
-        }
+        testedDocumentBudgetaire: makeAsyncMutationFunctions('testedDocumentBudgetaire')
     }
 })

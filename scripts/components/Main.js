@@ -1,8 +1,12 @@
 import {Set as ImmutableSet} from 'immutable'
 import {h} from 'preact'
 
-import makeLigneBudgetFilterFromFormula from '../DocumentBudgetaireQueryLanguage/makeLigneBudgetFilterFromFormula.js'
 import Agregation from './Agregation.js'
+import ContextHeader from './ContextHeader.js'
+
+import makeLigneBudgetFilterFromFormula from '../DocumentBudgetaireQueryLanguage/makeLigneBudgetFilterFromFormula.js'
+import {ASYNC_STATUS, STATUS_VALUE} from '../asyncStatusHelpers.js';
+import _actions from '../actions'
 
 function mapStateToProps({formulas, testedDocumentBudgetaire}){
     return {
@@ -11,26 +15,35 @@ function mapStateToProps({formulas, testedDocumentBudgetaire}){
                 id,
                 name, 
                 formula, 
-                rows: testedDocumentBudgetaire ?
+                rows: testedDocumentBudgetaire && testedDocumentBudgetaire[ASYNC_STATUS] === STATUS_VALUE ?
                     testedDocumentBudgetaire.rows.filter(makeLigneBudgetFilterFromFormula(formula)) :
                     new ImmutableSet()
             }
         )),
-        documentBudgetaire: testedDocumentBudgetaire
+        documentBudgetaire: testedDocumentBudgetaire && testedDocumentBudgetaire[ASYNC_STATUS] === STATUS_VALUE ? 
+            testedDocumentBudgetaire : 
+            undefined
     }
 }
 
 export default function({store}){
+    const actions =_actions(store);
+
+    const {testedDocumentBudgetaire} = store.state;
+    const docBudg = testedDocumentBudgetaire && testedDocumentBudgetaire[ASYNC_STATUS] === STATUS_VALUE ? 
+        testedDocumentBudgetaire : 
+        undefined
+
     const props = Object.assign(
         mapStateToProps(store.state),
-        store.mutations
+        store.mutations,
+        actions
     )
 
     return html`
         <div>
-            <h1>Yo !</h1>
+            <${ContextHeader} documentBudgetaire=${docBudg} onNewDocumentBudgetaireText=${actions.onNewDocumentBudgetaireText} /> 
             <${Agregation} ...${props}/>
         </div>
-        
     `
 }

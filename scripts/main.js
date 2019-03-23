@@ -53,7 +53,7 @@ else{
 	])
 	.then(([doc, natureToChapitreFI]) => xmlDocumentToDocumentBudgetaire(doc, natureToChapitreFI))
 	.then(docBudg => {
-		store.mutations.setTestedDocumentBudgetaire(docBudg)
+		store.mutations.testedDocumentBudgetaire.setValue(docBudg)
 	})
 	.catch(console.error)
 
