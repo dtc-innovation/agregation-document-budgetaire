@@ -1,43 +1,49 @@
 import {Set as ImmutableSet} from 'immutable'
 import {h} from 'preact'
 
-import makeLigneBudgetFilterFromFormula from '../DocumentBudgetaireQueryLanguage/makeLigneBudgetFilterFromFormula.js'
 import Agregation from './Agregation.js'
+import ContextHeader from './ContextHeader.js'
 
-function mapDispatchToProps(store){
-    return {
-        addFormula({name, formula}){
-            store.mutations.addFormula({name, formula})
-        }
-    }
-}
+import makeLigneBudgetFilterFromFormula from '../DocumentBudgetaireQueryLanguage/makeLigneBudgetFilterFromFormula.js'
+import {ASYNC_STATUS, STATUS_VALUE} from '../asyncStatusHelpers.js';
+import _actions from '../actions'
 
 function mapStateToProps({formulas, testedDocumentBudgetaire}){
     return {
-        agregation: formulas.map(({name, formula}) => (
+        agregation: [...formulas.values()].map(({id, name, formula}) => (
             {
+                id,
                 name, 
                 formula, 
-                rows: testedDocumentBudgetaire ?
+                rows: testedDocumentBudgetaire && testedDocumentBudgetaire[ASYNC_STATUS] === STATUS_VALUE ?
                     testedDocumentBudgetaire.rows.filter(makeLigneBudgetFilterFromFormula(formula)) :
                     new ImmutableSet()
             }
         )),
-        documentBudgetaire: testedDocumentBudgetaire
+        documentBudgetaire: testedDocumentBudgetaire && testedDocumentBudgetaire[ASYNC_STATUS] === STATUS_VALUE ? 
+            testedDocumentBudgetaire : 
+            undefined
     }
 }
 
 export default function({store}){
+    const actions =_actions(store);
+
+    const {testedDocumentBudgetaire} = store.state;
+    const docBudg = testedDocumentBudgetaire && testedDocumentBudgetaire[ASYNC_STATUS] === STATUS_VALUE ? 
+        testedDocumentBudgetaire : 
+        undefined
+
     const props = Object.assign(
         mapStateToProps(store.state),
-        mapDispatchToProps(store)
+        store.mutations,
+        actions
     )
 
     return html`
-        <div>
-            <h1>Yo !</h1>
+        <main>
+            <${ContextHeader} documentBudgetaire=${docBudg} onNewDocumentBudgetaireText=${actions.onNewDocumentBudgetaireText} /> 
             <${Agregation} ...${props}/>
-        </div>
-        
+        </main>
     `
 }

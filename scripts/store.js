@@ -1,16 +1,19 @@
 import Store from 'baredux'
 
+import {makeAsyncMutationFunctions} from './asyncStatusHelpers.js'
+
 export default new Store({
     state: {
-        formulas: [],
+        formulas: new Map(),
         testedDocumentBudgetaire: undefined
     },
     mutations: {
-        addFormula(state, {name, formula}){
-            state.formulas.push({name, formula})
+        addFormula(state, {id, name, formula}){
+            state.formulas.set(id, {id, name, formula})
         },
-        setTestedDocumentBudgetaire(state, testedDocumentBudgetaire){
-            state.testedDocumentBudgetaire = testedDocumentBudgetaire
-        }
+        changeFormula(state, newFormula){
+            state.formulas.set(newFormula.id, newFormula)
+        },
+        testedDocumentBudgetaire: makeAsyncMutationFunctions('testedDocumentBudgetaire')
     }
 })
