@@ -1,16 +1,16 @@
 workflow "Deploy npm build on gh-pages" {
   on = "push"
-  resolves = ["Deploy"]
+  resolves = ["Deploy to GitHub Pages"]
 }
 
 action "With Master Branch" {
   uses = "actions/bin/filter@master"
-  args = "branch master"
+  args = "branch github-action"
 }
 
 action "Install npm dependencies" {
   uses = "actions/npm@master"
-  args = "install"
+  args = "ci"
   needs = ["With Master Branch"]
 }
 
@@ -20,11 +20,11 @@ action "Build" {
   args = "run build"
 }
 
-action "Deploy" {
-  uses = "maxheld83/ghpages@v0.2.1"
+action "Deploy to GitHub Pages" {
+  uses = "gr2m/ghpages-1@4033a3c"
   needs = ["Build"]
+  secrets = ["GITHUB_TOKEN"]
   env = {
     BUILD_DIR = "."
   }
-  secrets = ["GITHUB_TOKEN"]
 }
