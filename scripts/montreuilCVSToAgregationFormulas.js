@@ -52,6 +52,8 @@ function makeFonctionNatureCombo(fonction, nature){
 }
 
 export default function MontreuilNomenclatureToAggregationDescription(montreuilNomenclature, docBudgs){
+    console.log('docBudgs', docBudgs)
+
     let map = new ImmutableMap()
 
     const docBudgsFonctionNatureCombos = new Set()

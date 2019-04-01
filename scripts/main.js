@@ -16,26 +16,43 @@ const isMontreuil = new Set((new URLSearchParams(location.search)).keys()).has('
 
 if(isMontreuil){
 	// Download and transform some Compte Administratif for easier use
-	const docBudgP = Promise.all([
-		xml('./data/CA/CA 2017.xml'),
-		xml('./data/plansDeCompte/plan-de-compte-M14-M14_COM_SUP3500-2017.xml')
-			.then(pdC => makeNatureToChapitreFI([pdC]))
-	])
-	.then(([doc, natureToChapitreFI]) => xmlDocumentToDocumentBudgetaire(doc, natureToChapitreFI))
-	.then(docBudg => {
-		console.log('docBudg', docBudg.toJS())
-		store.mutations.testedDocumentBudgetaire.setValue(docBudg)
-		return docBudg
-	})
-	.catch(console.error)
+	const docBudgsP = Promise.all([
+		{
+			CA: 'CA_2016.xml',
+			planDeCompte: 'plan-de-compte-M14-M14_COM_SUP3500-2016.xml'
+		},
+		{
+			CA: 'CA 2017.xml',
+			planDeCompte: 'plan-de-compte-M14-M14_COM_SUP3500-2017.xml'
+		},
+		{
+			CA: 'CA_2018.xml',
+			planDeCompte: 'plan-de-compte-M14-M14_COM_SUP3500-2018.xml'
+		}
+	].map(({CA, planDeCompte}) => {
+		return Promise.all([
+			xml(`./data/CA/${CA}`),
+			xml(`./data/plansDeCompte/${planDeCompte}`)
+				.then(pdC => makeNatureToChapitreFI([pdC]))
+		])
+		.then(([doc, natureToChapitreFI]) => xmlDocumentToDocumentBudgetaire(doc, natureToChapitreFI))
+		.then(docBudg => {
+			if(CA === 'CA_2018.xml')
+				store.mutations.testedDocumentBudgetaire.setValue(docBudg)
+			
+			return docBudg
+		})
+		.catch(console.error)
+	}))
 
 
 	// Download Montreuil "Open data nomenclature" CSV and transform it to formulas
 	Promise.all([
 		csv('./data/agregation-Montreuil-v4.csv'),
-		docBudgP
+		csv('./data/NATURES - FONCTIONS v4 complément.csv'),
+		docBudgsP
 	])
-	.then(([csvData, docBudg]) => montreuilCVSToAgregationFormulas(csvData, [docBudg]))
+	.then(([csvData, csvData2, docBudgs]) => montreuilCVSToAgregationFormulas(csvData.concat(csvData2), docBudgs))
 	.then(formulas => {
 		console.log('formulas', formulas)
 
