@@ -17,8 +17,8 @@ const isMontreuil = new Set((new URLSearchParams(location.search)).keys()).has('
 if(isMontreuil){
 	// Download and transform some Compte Administratif for easier use
 	const docBudgP = Promise.all([
-		xml('./data/CA/CA 2017.xml'),
-		xml('./data/plansDeCompte/plan-de-compte-M14-M14_COM_SUP3500-2017.xml')
+		xml('./data/CA/CA_2018.xml'),
+		xml('./data/plansDeCompte/plan-de-compte-M14-M14_COM_SUP3500-2018.xml')
 			.then(pdC => makeNatureToChapitreFI([pdC]))
 	])
 	.then(([doc, natureToChapitreFI]) => xmlDocumentToDocumentBudgetaire(doc, natureToChapitreFI))
