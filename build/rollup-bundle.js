@@ -1,7 +1,7 @@
 (function (factory) {
   typeof define === 'function' && define.amd ? define(factory) :
   factory();
-}(function () { 'use strict';
+}((function () { 'use strict';
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -58,20 +58,35 @@
     return _extends.apply(this, arguments);
   }
 
-  function _objectSpread(target) {
+  function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(object);
+      if (enumerableOnly) symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+      keys.push.apply(keys, symbols);
+    }
+
+    return keys;
+  }
+
+  function _objectSpread2(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i] != null ? arguments[i] : {};
-      var ownKeys = Object.keys(source);
 
-      if (typeof Object.getOwnPropertySymbols === 'function') {
-        ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
-          return Object.getOwnPropertyDescriptor(source, sym).enumerable;
-        }));
+      if (i % 2) {
+        ownKeys(Object(source), true).forEach(function (key) {
+          _defineProperty(target, key, source[key]);
+        });
+      } else if (Object.getOwnPropertyDescriptors) {
+        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+      } else {
+        ownKeys(Object(source)).forEach(function (key) {
+          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
       }
-
-      ownKeys.forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
     }
 
     return target;
@@ -149,6 +164,10 @@
   }
 
   function _iterableToArrayLimit(arr, i) {
+    if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) {
+      return;
+    }
+
     var _arr = [];
     var _n = true;
     var _d = false;
@@ -233,6 +252,7 @@
     p.children = children;
     p.attributes = attributes == null ? undefined : attributes;
     p.key = attributes == null ? undefined : attributes.key;
+    if (options.vnode !== undefined) options.vnode(p);
     return p;
   }
 
@@ -245,7 +265,7 @@
   }
 
   function applyRef(ref, value) {
-    if (ref != null) {
+    if (ref) {
       if (typeof ref == 'function') ref(value);else ref.current = value;
     }
   }
@@ -257,7 +277,7 @@
 
   function enqueueRender(component) {
     if (!component._dirty && (component._dirty = true) && items.push(component) == 1) {
-      (defer)(rerender);
+      (options.debounceRendering || defer)(rerender);
     }
   }
 
@@ -367,7 +387,7 @@
   }
 
   function eventProxy(e) {
-    return this._listeners[e.type](e);
+    return this._listeners[e.type](options.event && options.event(e) || e);
   }
 
   var mounts = [];
@@ -379,6 +399,7 @@
     var c;
 
     while (c = mounts.shift()) {
+      if (options.afterMount) options.afterMount(c);
       if (c.componentDidMount) c.componentDidMount();
     }
   }
@@ -783,6 +804,8 @@
       if (component.componentDidUpdate) {
         component.componentDidUpdate(previousProps, previousState, snapshot);
       }
+
+      if (options.afterUpdate) options.afterUpdate(component);
     }
 
     while (component._renderCallbacks.length) {
@@ -833,6 +856,7 @@
   }
 
   function unmountComponent(component) {
+    if (options.beforeUnmount) options.beforeUnmount(component);
     var base = component.base;
     component._disable = true;
     if (component.componentWillUnmount) component.componentWillUnmount();
@@ -926,10 +950,10 @@
         minutes = date.getUTCMinutes(),
         seconds = date.getUTCSeconds(),
         milliseconds = date.getUTCMilliseconds();
-    return isNaN(date) ? "Invalid Date" : formatYear(date.getUTCFullYear(), 4) + "-" + pad(date.getUTCMonth() + 1, 2) + "-" + pad(date.getUTCDate(), 2) + (milliseconds ? "T" + pad(hours, 2) + ":" + pad(minutes, 2) + ":" + pad(seconds, 2) + "." + pad(milliseconds, 3) + "Z" : seconds ? "T" + pad(hours, 2) + ":" + pad(minutes, 2) + ":" + pad(seconds, 2) + "Z" : minutes || hours ? "T" + pad(hours, 2) + ":" + pad(minutes, 2) + "Z" : "");
+    return isNaN(date) ? "Invalid Date" : formatYear(date.getUTCFullYear()) + "-" + pad(date.getUTCMonth() + 1, 2) + "-" + pad(date.getUTCDate(), 2) + (milliseconds ? "T" + pad(hours, 2) + ":" + pad(minutes, 2) + ":" + pad(seconds, 2) + "." + pad(milliseconds, 3) + "Z" : seconds ? "T" + pad(hours, 2) + ":" + pad(minutes, 2) + ":" + pad(seconds, 2) + "Z" : minutes || hours ? "T" + pad(hours, 2) + ":" + pad(minutes, 2) + "Z" : "");
   }
 
-  function dsv (delimiter) {
+  function dsvFormat (delimiter) {
     var reFormat = new RegExp("[\"" + delimiter + "\n\r]"),
         DELIMITER = delimiter.charCodeAt(0);
 
@@ -1044,19 +1068,10 @@
     };
   }
 
-  var csv = dsv(",");
+  var csv = dsvFormat(",");
   var csvParse = csv.parse;
-  var csvParseRows = csv.parseRows;
-  var csvFormat = csv.format;
-  var csvFormatBody = csv.formatBody;
-  var csvFormatRows = csv.formatRows;
 
-  var tsv = dsv("\t");
-  var tsvParse = tsv.parse;
-  var tsvParseRows = tsv.parseRows;
-  var tsvFormat = tsv.format;
-  var tsvFormatBody = tsv.formatBody;
-  var tsvFormatRows = tsv.formatRows;
+  var tsv = dsvFormat("\t");
 
   function responseText(response) {
     if (!response.ok) throw new Error(response.status + " " + response.statusText);
@@ -6772,8 +6787,8 @@
       _iteratorError = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
+        if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+          _iterator["return"]();
         }
       } finally {
         if (_didIteratorError) {
@@ -6837,8 +6852,8 @@
       _iteratorError = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
+        if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+          _iterator["return"]();
         }
       } finally {
         if (_didIteratorError) {
@@ -6905,8 +6920,8 @@
           _iteratorError2 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-              _iterator2.return();
+            if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+              _iterator2["return"]();
             }
           } finally {
             if (_didIteratorError2) {
@@ -6924,8 +6939,8 @@
       _iteratorError = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
+        if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+          _iterator["return"]();
         }
       } finally {
         if (_didIteratorError) {
@@ -7014,12 +7029,12 @@
             });
           }
         }), focused && rows.size >= 1 ? h("table", {
-          class: "formula-rows"
+          "class": "formula-rows"
         }, h("thead", null, h("tr", null, ['RDFI', 'Fonction', 'Nature', 'Montant'].map(function (s) {
           return h("th", null, s);
         }))), h("tbody", null, rows.toArray().map(function (r) {
           return h("tr", null, h("td", null, r['CodRD'] + r['FI']), h("td", null, r['Fonction']), h("td", null, r['Nature']), h("td", {
-            class: "money-amount"
+            "class": "money-amount"
           }, r['MtReal'].toFixed(2) + '€'));
         }))) : undefined), h("td", null, rows.size), h("td", null, sum(rows.toJS().map(function (r) {
           return r['MtReal'];
@@ -7039,7 +7054,7 @@
         addFormula = _ref.addFormula,
         changeFormula = _ref.changeFormula;
     return h("table", {
-      class: "agregation"
+      "class": "agregation"
     }, h("thead", null, h("tr", null, h("th", null, "Nom"), h("th", null, "Formule"), h("th", null, "Nombre"), h("th", null, "Total"))), h("tbody", null, agregation.map(function (ag) {
       var id = ag.id,
           name = ag.name,
@@ -7129,7 +7144,7 @@
     })));
   }
 
-  var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+  var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
   function createCommonjsModule(fn, module) {
   	return module = { exports: {} }, fn(module, module.exports), module.exports;
@@ -7137,7 +7152,7 @@
 
   var nearley = createCommonjsModule(function (module) {
     (function (root, factory) {
-      if (module.exports) {
+      if ( module.exports) {
         module.exports = factory();
       } else {
         root.nearley = factory();
@@ -7461,10 +7476,7 @@
 
           if (nextColumn.states.length === 0) {
             // No states at all! This is not good.
-            var message = this.lexer.formatError(token, "invalid syntax") + "\n";
-            message += "Unexpected " + (token.type ? token.type + " token: " : "");
-            message += JSON.stringify(token.value !== undefined ? token.value : token) + "\n";
-            var err = new Error(message);
+            var err = new Error(this.reportError(token));
             err.offset = this.current;
             err.token = token;
             throw err;
@@ -7486,6 +7498,107 @@
         this.results = this.finish(); // Allow chaining, for whatever it's worth
 
         return this;
+      };
+
+      Parser.prototype.reportError = function (token) {
+        var lines = [];
+        var tokenDisplay = (token.type ? token.type + " token: " : "") + JSON.stringify(token.value !== undefined ? token.value : token);
+        lines.push(this.lexer.formatError(token, "Syntax error"));
+        lines.push('Unexpected ' + tokenDisplay + '. Instead, I was expecting to see one of the following:\n');
+        var lastColumnIndex = this.table.length - 2;
+        var lastColumn = this.table[lastColumnIndex];
+        var expectantStates = lastColumn.states.filter(function (state) {
+          var nextSymbol = state.rule.symbols[state.dot];
+          return nextSymbol && typeof nextSymbol !== "string";
+        }); // Display a "state stack" for each expectant state
+        // - which shows you how this state came to be, step by step. 
+        // If there is more than one derivation, we only display the first one.
+
+        var stateStacks = expectantStates.map(function (state) {
+          var stacks = this.buildStateStacks(state, []);
+          return stacks[0];
+        }, this); // Display each state that is expecting a terminal symbol next.
+
+        stateStacks.forEach(function (stateStack) {
+          var state = stateStack[0];
+          var nextSymbol = state.rule.symbols[state.dot];
+          var symbolDisplay = this.getSymbolDisplay(nextSymbol);
+          lines.push('A ' + symbolDisplay + ' based on:');
+          this.displayStateStack(stateStack, lines);
+        }, this);
+        lines.push("");
+        return lines.join("\n");
+      };
+
+      Parser.prototype.displayStateStack = function (stateStack, lines) {
+        var lastDisplay;
+        var sameDisplayCount = 0;
+
+        for (var j = 0; j < stateStack.length; j++) {
+          var state = stateStack[j];
+          var display = state.rule.toString(state.dot);
+
+          if (display === lastDisplay) {
+            sameDisplayCount++;
+          } else {
+            if (sameDisplayCount > 0) {
+              lines.push('    ⬆ ︎' + sameDisplayCount + ' more lines identical to this');
+            }
+
+            sameDisplayCount = 0;
+            lines.push('    ' + display);
+          }
+
+          lastDisplay = display;
+        }
+      };
+
+      Parser.prototype.getSymbolDisplay = function (symbol) {
+        var type = typeof symbol;
+
+        if (type === "string") {
+          return symbol;
+        } else if (type === "object" && symbol.literal) {
+          return JSON.stringify(symbol.literal);
+        } else if (type === "object" && symbol instanceof RegExp) {
+          return 'character matching ' + symbol;
+        } else if (type === "object" && symbol.type) {
+          return symbol.type + ' token';
+        } else {
+          throw new Error('Unknown symbol type: ' + symbol);
+        }
+      };
+      /*
+      Builds a number of "state stacks". You can think of a state stack as the call stack
+      of the recursive-descent parser which the Nearley parse algorithm simulates.
+      A state stack is represented as an array of state objects. Within a 
+      state stack, the first item of the array will be the starting
+      state, with each successive item in the array going further back into history.
+      
+      This function needs to be given a starting state and an empty array representing
+      the visited states, and it returns an array of state stacks. 
+      
+      */
+
+
+      Parser.prototype.buildStateStacks = function (state, visited) {
+        if (visited.indexOf(state) !== -1) {
+          // Found cycle, return empty array (meaning no stacks)
+          // to eliminate this path from the results, because
+          // we don't know how to display it meaningfully
+          return [];
+        }
+
+        if (state.wantedBy.length === 0) {
+          return [[state]];
+        }
+
+        var that = this;
+        return state.wantedBy.reduce(function (stacks, prevState) {
+          return stacks.concat(that.buildStateStacks(prevState, [state].concat(visited)).map(function (stack) {
+            return [state].concat(stack);
+          }));
+        }, []);
       };
 
       Parser.prototype.save = function () {
@@ -7631,11 +7744,11 @@
   var cacheDefault = {
     create: function create() {
       return new ObjectWithoutPrototypeCache();
-    } //
-    // API
-    //
+    }
+  }; //
+  // API
+  //
 
-  };
   var src = memoize;
   var strategies = {
     variadic: strategyVariadic,
@@ -7955,7 +8068,7 @@
             return makeNatureToChapitreFI([planDeCompte]);
           }).then(function (natureToChapitreFI) {
             return xmlDocumentToDocumentBudgetaire(docBudg, natureToChapitreFI);
-          }).then(store.mutations.testedDocumentBudgetaire.setValue).catch(store.mutations.testedDocumentBudgetaire.setError);
+          }).then(store.mutations.testedDocumentBudgetaire.setValue)["catch"](store.mutations.testedDocumentBudgetaire.setError);
         });
       }
     };
@@ -8135,8 +8248,8 @@
       _iteratorError = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
+        if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+          _iterator["return"]();
         }
       } finally {
         if (_didIteratorError) {
@@ -8198,8 +8311,8 @@
           _iteratorError4 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
-              _iterator4.return();
+            if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
+              _iterator4["return"]();
             }
           } finally {
             if (_didIteratorError4) {
@@ -8213,8 +8326,8 @@
       _iteratorError2 = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-          _iterator2.return();
+        if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+          _iterator2["return"]();
         }
       } finally {
         if (_didIteratorError2) {
@@ -8243,8 +8356,8 @@
       _iteratorError3 = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-          _iterator3.return();
+        if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+          _iterator3["return"]();
         }
       } finally {
         if (_didIteratorError3) {
@@ -8282,9 +8395,9 @@
       console.log('docBudg', docBudg.toJS());
       store.mutations.testedDocumentBudgetaire.setValue(docBudg);
       return docBudg;
-    }).catch(console.error); // Download Montreuil "Open data nomenclature" CSV and transform it to formulas
+    })["catch"](console.error); // Download Montreuil "Open data nomenclature" CSV and transform it to formulas
 
-    Promise.all([csv$1('./data/agregation-Montreuil-v7.csv'), docBudgP]).then(function (_ref3) {
+    Promise.all([csv$1('./data/agregation-Montreuil-v12.csv'), docBudgP]).then(function (_ref3) {
       var _ref4 = _slicedToArray(_ref3, 2),
           csvData = _ref4[0],
           docBudg = _ref4[1];
@@ -8312,8 +8425,8 @@
         _iteratorError = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
           }
         } finally {
           if (_didIteratorError) {
@@ -8334,7 +8447,7 @@
       return xmlDocumentToDocumentBudgetaire(doc, natureToChapitreFI);
     }).then(function (docBudg) {
       store.mutations.testedDocumentBudgetaire.setValue(docBudg);
-    }).catch(console.error);
+    })["catch"](console.error);
     var formulas = getStoredState();
     var _iteratorNormalCompletion2 = true;
     var _didIteratorError2 = false;
@@ -8357,8 +8470,8 @@
       _iteratorError2 = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-          _iterator2.return();
+        if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+          _iterator2["return"]();
         }
       } finally {
         if (_didIteratorError2) {
@@ -8373,7 +8486,7 @@
 
   function renderUI() {
     render(h(Main, {
-      store: _objectSpread({}, store)
+      store: _objectSpread2({}, store)
     }), container, container.firstElementChild);
   } // initial render
 
@@ -8384,4 +8497,4 @@
 
   store.subscribe(saveState);
 
-}));
+})));
