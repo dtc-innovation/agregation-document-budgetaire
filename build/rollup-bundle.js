@@ -6892,7 +6892,6 @@
       });
     });
   }
-
   function makeUsedMoreThanOnceLigneBudgetSet(documentBudgetaire, agregation) {
     var aggregationSetsByRow = new Map();
     var _iteratorNormalCompletion = true;
@@ -6961,18 +6960,18 @@
     });
   }
 
-  function AgregationAnalysis (_ref3) {
-    var agregation = _ref3.agregation,
-        documentBudgetaire = _ref3.documentBudgetaire;
+  function AgregationAnalysis (_ref) {
+    var agregation = _ref.agregation,
+        documentBudgetaire = _ref.documentBudgetaire;
     var unusedRows = documentBudgetaire ? makeUnusedLigneBudgetSet(documentBudgetaire, agregation).toJS() : [];
     var rowsUsedMoreThanOnce = documentBudgetaire ? makeUsedMoreThanOnceLigneBudgetSet(documentBudgetaire, agregation) : [];
     return h("section", null, h("h1", null, "Analyse"), h("p", null, "Il y a ", documentBudgetaire && documentBudgetaire.rows.size, " lignes dans le document budgetaire"), h("p", null, "Il y a ", agregation.length, " feuilles d'agr\xE9gation"), h("h2", null, "Lignes non-utilis\xE9es (", unusedRows.length, ")"), h("table", null, unusedRows.map(function (row) {
       return h("tr", null, h("td", null, row["CodRD"], row["FI"]), h("td", null, "F", row["Fonction"]), h("td", null, "C", row["Chapitre"]), h("td", null, "N", row["Nature"]), h("td", null, row["MtReal"]));
-    })), h("h2", null, "Lignes utilis\xE9es plus qu'une fois (", rowsUsedMoreThanOnce.length, ")"), h("table", null, rowsUsedMoreThanOnce.map(function (_ref4) {
-      var row = _ref4.row,
-          aggregationSets = _ref4.aggregationSets;
-      return h("tr", null, h("td", null, row["CodRD"], row["FI"], " F", row["Fonction"], " C", row["Chapitre"], " N", row["Nature"]), h("td", null, aggregationSets.map(function (_ref5) {
-        var name = _ref5.name;
+    })), h("h2", null, "Lignes utilis\xE9es plus qu'une fois (", rowsUsedMoreThanOnce.length, ")"), h("table", null, rowsUsedMoreThanOnce.map(function (_ref2) {
+      var row = _ref2.row,
+          aggregationSets = _ref2.aggregationSets;
+      return h("tr", null, h("td", null, row["CodRD"], row["FI"], " F", row["Fonction"], " C", row["Chapitre"], " N", row["Nature"]), h("td", null, aggregationSets.map(function (_ref3) {
+        var name = _ref3.name;
         return name;
       }).join(' & ')));
     })));
@@ -8397,7 +8396,7 @@
       return docBudg;
     })["catch"](console.error); // Download Montreuil "Open data nomenclature" CSV and transform it to formulas
 
-    Promise.all([csv$1('./data/agregation-Montreuil-v12.csv'), docBudgP]).then(function (_ref3) {
+    Promise.all([csv$1('./data/agregation-Montreuil-v13.csv'), docBudgP]).then(function (_ref3) {
       var _ref4 = _slicedToArray(_ref3, 2),
           csvData = _ref4[0],
           docBudg = _ref4[1];
