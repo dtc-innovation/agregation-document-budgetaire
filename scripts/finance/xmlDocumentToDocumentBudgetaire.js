@@ -14,7 +14,10 @@ export default function(doc, natureToChapitreFI){
     const lignes = Array.from(doc.getElementsByTagName('LigneBudget'))
     .filter(l => {
         const isOR = l.getElementsByTagName('OpBudg')[0].getAttribute('V') === '0';
-        const hasNon0Amount = Number(l.getElementsByTagName('MtReal')[0].getAttribute('V')) !== 0;
+
+        // Certaines lignes de CA n'ont pas de montant réalisé (il y a en général un `ContNat[v="012"]` au lieu de `011`, complété par un `MtPropNouv`, un `MtPrev` et/ou un `CredOuv`)
+        const amountElement = l.querySelector('MtReal')
+        const hasNon0Amount = amountElement && Number(amountElement.getAttribute('V')) !== 0;
 
         const n = l.getElementsByTagName('Nature')[0].getAttribute('V');
         const f = l.getElementsByTagName('Fonction')[0].getAttribute('V');
